@@ -1,0 +1,226 @@
+Metadata-Version: 1.1
+Name: soapfish
+Version: 0.6.dev0
+Summary: A SOAP library for Python
+Home-page: https://github.com/FelixSchwarz/soapfish
+Author: Damian Powązka
+Author-email: dpowazka@gmail.com
+License: New BSD License
+Description: soapfish
+        ===========
+        
+        [![Build Status](https://travis-ci.org/FelixSchwarz/soapfish.png?branch=master)](https://travis-ci.org/FelixSchwarz/soapfish)
+        
+        
+        Introduction
+        ------------
+        
+        soapfish is a library to use SOAP services in Python. The server-side component
+        can be used with Pyramid, Django and other frameworks (including plain WSGI).
+        The library can also be used to implement SOAP clients with httplib2 (and
+        using another HTTP request library such as requests should only require
+        about 20-30 lines of code).
+        
+        The library can also help parsing/serializing a Python class model from/to XML
+        and a bare-bones SOAP client.
+        
+        The project aims to support any SOAP service. Therefore the code supports:
+        
+        - SOAP 1.1 and 1.2
+        - WSDL 1.1 and 1.2
+        - WS-Addressing
+        
+        
+        Other notable features:
+        
+        - support for Python 2.6+2.7 and Python 3
+        - code generation utilities to get started quickly
+        - parsing/serializing a Python class model from/to XML so you can easily work
+          with XML even if you don't use SOAP at all.
+        - licensed under the 3-clause BSD license
+        
+        
+        The main contributors were Damian Powązka, Flight Data Services,
+        Thomas Recouvreux and Xavier Fernandez (Polyconseil) and
+        Felix Schwarz (sponsored by Rechenzentrum für Berliner Apotheken Stein & Reichwald GmbH).
+        
+        Changes
+        =======
+        
+        0.6dev
+        ------
+        * Project renamed to "soapfish"
+          It looks like this will be a permanent fork and with a different name we
+          can publish packages on pypi. As a part of the project renaming I changed
+          all references to "soapbox" (including class and package names) from
+          "soapbox" to "soapfish" causing a big API break for all existing users. Also
+          SoapboxRequest and SoapboxResponse were renamed to SOAPRequest/SOAPResponse
+          so they blend in better with the overall naming convention.
+        * This release fixes a potential SECURITY ISSUE (pattern restrictions were not
+          applied correctly).
+        * schema validation now also uses imported schemas correctly.
+        * fixes for wsdl2py and xsd2py when using Python 3
+        * restored ability to validate parsed XML using a soapfish schema in ComplexType
+        * support choice indicator in ComplexTypes (#39)
+          This fixes validation of matching XML documents (previously soapfish always
+          assumed sequences) as well as code generation from WSDL/XSD
+          patch contributed by Martin Mrose, tests written by Felix Schwarz
+        * add support for xsd.date (date range currently limited by datetime.date)
+        * Bug fixes:
+          - fix exception in SOAPDispatcher when a handler does not return a SOAPResponse
+          - correctly apply pattern restrictions for simple types
+          - pattern restriction was not correctly serialized when generating xsd schemas
+          - omit minOccurs=1 and maxOccurs=1 in xsd2py: these are the defaults and the
+            latter even produces invalid code (because xsd.Element does not support
+            the maxOccurs attribute)
+          - fix bad WSDL generation due to unresolved type reference
+        
+        
+        0.5.1 (2014-06-12)
+        ------------------
+        * downgrade log level on soap action discovery
+        
+        
+        0.5.0 (2014-06-12)
+        ------------------
+        * Make elements inherit from schema namespace
+        * better logging in soap/stub
+        * soap12: Quotes around action in http header
+        
+        
+        0.4.0 (2014-05-06)
+        ------------------
+        * "soapbox" project forked by Felix Schwarz as "soapbox-bsd" due to
+          licensing incompatibilities (Flight Data Services insists on using the
+          GPL-incompatible OSL). This fork is based on the last soapbox commit
+          still using the original 3-clause BSD license (7d3516fe).
+          Later on the fork received significant contributions from Thomas Recouvreux
+          and Xavier Fernandez (Polyconseil).
+        * added framework-agnostic SOAP dispatcher so soapbox-bsd is not tied to Django
+          anymore but can be used with virtually any web framework (including Flask,
+          Pyramid, pure WSGI)
+        * support for SOAP 1.2 and WSDL 1.2
+        * support for WS-Addressing
+        * Code is now compatible with Python 3
+        * support for Django >= 1.4
+        * fault actor support (Damian Powązka)
+        * many bug fixes for code generation and XML rendering
+        * preserve elementFormDefault attribute in Schema
+        * ability to use custom SOAP headers
+        * middleware stack to hook into SOAP request processing
+        * better handling of invalid SOAP requests (e.g. missing SOAP bodies, invalid
+          SOAP actions)
+        * very likely even more fixes which I forgot to mention here ...
+        
+        
+        0.3.2
+        -----
+        
+        * Initial support for variable URL scheme and host
+        * Test suite executes
+        
+        0.3.1
+        -----
+        
+        * SSL certificate verification
+        
+        0.3.0
+        -----
+        
+        - **Features**:
+          - Add option to disable schema validation on parsing:
+            - Set ``xsd.VALIDATE_ON_PARSE`` to ``False``.
+          - Added some initial logging support:
+            - Request logging available at when level set to DEBUG.
+        - **Bug Fixes**:
+          - Allow unicode as a valid type for strings.
+          - Check for Python keywords and prefix with underscore.
+        - **Miscellaneous**:
+          - Python code templates now loaded from external files.
+          - Generated code is now much cleaner.
+          - Generated code is now timestamped.
+          - Code tidying as reported by pyflakes and pep8.
+          - Fixed a number of typographical errors.
+          - Various name improvements to functions.
+          - Updated .hgignore
+        - **Known Issues**:
+          - Generated schema classes can be circular referencing.
+        
+        TODO
+        ====
+        
+        This project is very, very promising:
+        - It is focused on XML and SOAP/WSDL without any compromise. In an ideal world
+          soapfish works with each and every syntax allowed by these technologies.
+        - It allows you to have a representation of arbitrary XML including support
+          for XSD. Parse any XML described by a schema into a nice class-based tree
+          (and the other way round: serialization is possible as well).
+        - Because soapfish supports only SOAP and no other remoting protocol (e.g.
+          ReST-style APIs with JSON) the API is not tied to the lowest common
+          denominator. You should be able implement any given WSDL.
+        
+        Unfortunately we're not there yet.
+        
+        This is a typical open source software and XML/SOAP is usually not perceived
+        as a fun project. So various users added some smaller features which they
+        needed but typically there are many incomplete implementations above the very
+        basic layer (the object model to represent XML/XSD programmatically).
+        On the upside that means there are a lot of ways to improve the code and your
+        contribution and make a big difference.
+        
+        Here some bigger areas which need work:
+        - much more comprehensive unit tests
+        - SOAP support for web frameworks other than Django (Pyramid already works
+          with the new SOAPDispatcher class)
+        - XSD schema generation (object graph to XSD file) has most of its logic in a
+          very complex Jinja2 template which shows it limits. For example features like
+          named xs:Elements with embedded anonymous ComplexTypes can not be serialized
+          to XSD currently.
+          However the code internally assumes that the class tree and the XSD
+          representation contain the same information so this can lead to bugs.
+        - The XSD mapping is currently incomplete: Some types in schemas are not
+          implemented at all (e.g. xs:date, xs:gYearMonth). Other types might not be
+          parsed/serialized correctly. Also references to xs:elements are pretty
+          incomplete right now.
+        - Generated code (e.g. WSDL handling or XSD mapping) usually has some syntax
+          errors. Some of them are fixable on their own but often this is because of
+          other missing features (see above). The output should be usable as
+          scaffolding though.
+        - Convert the ad-hoc fork to real project with its own name, website and docs
+        
+        Don't worry if the items on the list above seem to big for you. Just start out
+        with something small, write tests and contribute them. Even a small (failing)
+        unit test which demonstrates a current shortcoming is great.
+        
+        You might also check out current skipped unit tests which usually represent
+        missing functionality (though these might not be ideal beginner projects - if
+        they were trivial to implement I would have done that already).
+        
+        All these shortcomings and limitations exist only because of the lack of
+        time and/or awareness about certain XSD features. The goal of this library is
+        to fully implement XSD schemas and potentially SOAP/WSDL so patches (with tests)
+        are always welcome.
+        
+        OTHER TODOS
+        ============
+        
+        - Fix circular dependency of generated schema classes.
+        
+        See the **TODO** markers in ``soapfish/*.py`` for a complete list.
+        
+Keywords: SOAP,WSDL,web service
+Platform: OS Independent
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

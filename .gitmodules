@@ -1,0 +1,6 @@
+[submodule "files/soapfish"]
+	path = files/soapfish
+	url = https://github.com/FelixSchwarz/soapfish
+[submodule "files/srw.zesar"]
+	path = files/srw.zesar
+	url = https://bitbucket.org/steinreichwald/srw.zesar

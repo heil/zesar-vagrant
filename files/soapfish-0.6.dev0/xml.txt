@@ -1,0 +1,1 @@
+<e:code xmlns:e="http://foo.example">21 42</e:code>

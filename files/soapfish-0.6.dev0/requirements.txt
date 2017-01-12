@@ -1,0 +1,6 @@
+argparse
+httplib2>=0.7.0
+jinja2
+lxml
+PythonicTestcase
+six>=1.5.2

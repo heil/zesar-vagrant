@@ -1,0 +1,6 @@
+[console_scripts]
+py2wsdl = soapfish.py2wsdl:main
+py2xsd = soapfish.py2xsd:main
+wsdl2py = soapfish.wsdl2py:main
+xsd2py = soapfish.xsd2py:main
+
