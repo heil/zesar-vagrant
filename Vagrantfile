@@ -170,6 +170,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ubu1.vm.hostname = 'ubu1-14'
         ubu1.vm.network  :private_network, :ip => "192.168.192.51",
         :libvirt__network_name => "default"  # leave it
+
+        ubu1.vm.provider :libvirt do |libvirt|
+            libvirt.storage_pool_name = "vagrant"
+            #libvirt.storage :file, :size =>'10G', :type => 'qcow2'
+            #libvirt.storage :file, :size =>'20G', :type => 'qcow2'
+        end
         ubu1.vm.provider :libvirt do |domain|
             domain.cpus = 2
             domain.cpu_mode = 'host-passthrough'
@@ -187,6 +193,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ubu2.vm.hostname = 'ubu2-16'
         ubu2.vm.network  :private_network, :ip => "192.168.192.52",
         :libvirt__network_name => "default"  # leave it
+        ubu2.vm.provider :libvirt do |libvirt|
+            libvirt.storage_pool_name = "vagrant"
+            #libvirt.storage :file, :size =>'10G', :type => 'qcow2'
+            #libvirt.storage :file, :size =>'20G', :type => 'qcow2'
+        end
         ubu2.vm.provider :libvirt do |domain|
             domain.cpus = 2
             domain.cpu_mode = 'host-passthrough'
@@ -203,6 +214,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         c73.vm.hostname = 'c73-01'
         c73.vm.network  :private_network, :ip => "192.168.192.53",
         :libvirt__network_name => "default"  # leave it
+        c73.vm.provider :libvirt do |libvirt|
+            libvirt.storage_pool_name = "vagrant"
+            #libvirt.storage :file, :size =>'10G', :type => 'qcow2'
+            #libvirt.storage :file, :size =>'20G', :type => 'qcow2'
+        end
         c73.vm.provider :libvirt do |domain|
             domain.cpus = 2
             domain.cpu_mode = 'host-passthrough'
