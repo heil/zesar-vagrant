@@ -112,7 +112,7 @@ sudo yum install -y python-devel glibc-devel zlib-devel xz-devel libxml2-devel l
 sudo yum install postgresql-server -y
 
 sudo postgresql-setup initdb
-sudo perl -pi -e 's#127.0.0.1.*?ident#127.0.0.1\t\tmd5#g' /var/lib/pgsql/data/pg_hba.conf
+sudo perl -pi -e 's#127.0.0.1.*?ident#127.0.0.1/32\t\tmd5#g' /var/lib/pgsql/data/pg_hba.conf
 sudo perl -pi -e 's#::1/128.*?ident#::1/128\t\tmd5#g' /var/lib/pgsql/data/pg_hba.conf
 sudo systemctl start postgresql
 sudo systemctl restart postgresql
