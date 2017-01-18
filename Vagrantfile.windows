@@ -79,7 +79,7 @@ cd ~/files/soapfish-0.6.dev0
 pip install -r requirements.txt
 python setup.py develop
 
-cp /home/vagrant/files/database.sql /tmp
+cp ~/files/database.sql /tmp
 chmod 644 /tmp/database.sql
 sudo su - postgres -c '/usr/bin/psql -Upostgres < /tmp/database.sql'
 rm -rf /tmp/database.sql
@@ -92,7 +92,7 @@ pip install passlib --upgrade
 
 zesar-create-user production.ini --username=srw --password=secret --is-srw
 
-cat > /home/vagrant/run.sh <<'ENDOFMESSAGE'
+cat > ~/run.sh <<'ENDOFMESSAGE'
 cd $HOME
 #pyvenv-3.5 .venv35
 . .venv35/bin/activate
@@ -160,9 +160,6 @@ cd $HOME
 gunicorn --paste ~/files/production.ini
 ENDOFMESSAGE
 
-cd $HOME
-. .venv34/bin/activate
-
 cd ~/files/srw.zesar-client
 pip install -r requirements.txt
 python setup.py develop
@@ -170,64 +167,64 @@ python setup.py develop
 echo "provision done!!!"
 
 
+
 SCRIPT
 
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
+    
 	config.vm.define :ubu1 do |ubu1|
 		ubu1.vm.box = "ubuntu/trusty64"
 		ubu1.vm.hostname = 'ubu1-14'
 		ubu1.vm.network   "private_network", ip: "192.168.192.51"
-
-
+		
+				
 		ubu1.vm.provider "virtualbox" do |v|
 			v.gui = true
 			v.memory = 1024
-			v.cpus = 2
+			v.cpus = 2			
 			#v.customize ["modifyvm", :id, "--nic2", "nat", "--nat-network2", "zesar"]
 			#v.customize ["modifyvm", :id, "--nic2", "natnetwork", "--nat-network2", "zesar"]
 		end
-
+		        
 		ubu1.vm.synced_folder "files", "/home/vagrant/files", disabled: false, type: "rsync"
-		ubu1.vm.synced_folder ".", "/vagrant", disabled: true
+		ubu1.vm.synced_folder ".", "/vagrant", disabled: true		
         ubu1.vm.provision "shell", inline: $my_install, privileged: false
     end
 
     config.vm.define :ubu2 do |ubu2|
-        ubu2.vm.box = "boxcutter/ubuntu1604"
+        ubu2.vm.box = "ubuntu/xenial64"        
         ubu2.vm.hostname = 'ubu2-16'
         ubu2.vm.network  "private_network", ip: "192.168.192.52"
 		#,virtualbox__intnet: "zesar"
-
+        
 		ubu2.vm.provider "virtualbox" do |v|
 			v.gui = true
 			v.memory = 1024
 			v.cpus = 2
 		end
-
-		ubu2.vm.synced_folder "files", "/home/vagrant/files", disabled: false, type: "rsync"
+		
+		ubu2.vm.synced_folder "files", "/home/ubuntu/files", disabled: false, type: "rsync"
 		ubu2.vm.synced_folder ".", "/vagrant", disabled: true
         ubu2.vm.provision "shell", inline: $my_install_ubu_16, privileged: false
     end
     config.vm.define :c73 do |c73|
         c73.vm.box = "centos/7"
         c73.vm.hostname = 'c73-01'
-
+                
 		c73.vm.network  "private_network", ip: "192.168.192.53"
-
+		
 		c73.vm.provider "virtualbox" do |v|
 			v.gui = true
 			v.memory = 1024
 			v.cpus = 2
 			#v.customize ["modifyvm", :id, "--nic2", "natnetwork", "--nat-network2", "zesar"]
 		end
-
+			
 		c73.vm.synced_folder "files", "/home/vagrant/files", disabled: false, type: "rsync"
-		c73.vm.synced_folder ".", "/vagrant", disabled: true
+		c73.vm.synced_folder ".", "/vagrant", disabled: true        
         c73.vm.provision "shell", inline: $my_install_c73, privileged: false
     end
 end
-
 
 
