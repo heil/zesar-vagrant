@@ -4,3 +4,6 @@
 [submodule "files/srw.zesar"]
 	path = files/srw.zesar
 	url = https://bitbucket.org/steinreichwald/srw.zesar
+[submodule "files/srw.zesar-client"]
+	path = files/srw.zesar-client
+	url = https://bitbucket.org/steinreichwald/srw.zesar-client
