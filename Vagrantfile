@@ -98,11 +98,13 @@ cd $HOME
 . .venv35/bin/activate
 gunicorn --paste ~/files/production.ini
 
+
 ENDOFMESSAGE
 
 SCRIPT
 
 $my_install_c73 = <<SCRIPT
+
 sudo yum install perl -y
 sudo yum install epel-release -y
 sudo yum install vim-enhanced -y
@@ -159,7 +161,16 @@ cd $HOME
 gunicorn --paste ~/files/production.ini
 ENDOFMESSAGE
 
+#zesar-client
 
+cd $HOME
+. .venv34/bin/activate
+
+cd ~/files/srw.zesar-client
+pip install -r requirements.txt
+python setup.py develop
+
+echo "provision done!!!"
 
 SCRIPT
 
