@@ -174,6 +174,49 @@ echo "provision done!!!"
 
 SCRIPT
 
+$my_install_c73_client = <<SCRIPT
+
+sudo yum install perl -y
+sudo yum install epel-release -y
+sudo yum install vim-enhanced -y
+
+sudo yum install -y python-devel glibc-devel zlib-devel xz-devel libxml2-devel libgpg-error-devel libgcrypt-devel libxslt-devel libffi-devel postgresql-devel python34-devel popt-devel rpm-devel keyutils-libs-devel pcre-devel libsepol-devel libselinux-devel libverto-devel libcom_err-devel krb5-devel openssl-devel git
+
+sudo yum install -y python34-pip.noarch python34-setuptool python34 python34-devel
+sudo yum install -y gcc rpm-devel
+
+sudo pip3.4 install virtualenv
+virtualenv .venv34
+. .venv34/bin/activate
+
+pip install Babel
+pip install bcrypt
+pip install WebOb
+pip install pyramid
+pip install gunicorn
+
+cd ~/files/soapfish-0.6.dev0
+pip install -r requirements.txt
+python setup.py develop
+
+cd ~/files
+#
+#without create user goes wrong
+pip install passlib --upgrade
+
+#zesar-client
+
+cd $HOME
+. .venv34/bin/activate
+
+cd ~/files/srw.zesar-client
+pip install -r requirements.txt
+python setup.py develop
+
+echo "provision done!!!"
+
+SCRIPT
+
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define :ubu1 do |ubu1|
@@ -240,6 +283,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         c73.vm.synced_folder "./files", "/home/vagrant/files", disabled: false, create: true, owner: "vagrant", group: "vagrant"
         c73.vm.provision "shell", inline: $my_install_c73, privileged: false
     end
+    config.vm.define :c73_client do |c73_client|
+        c73_client.vm.box = "centos/7"
+        c73_client.vm.hostname = 'c73-client'
+        c73_client.vm.network  :private_network, :ip => "192.168.192.54",
+        :libvirt__network_name => "default"  # leave it
+        c73_client.vm.provider :libvirt do |libvirt|
+            libvirt.storage_pool_name = "vagrant"
+            #libvirt.storage :file, :size =>'10G', :type => 'qcow2'
+            #libvirt.storage :file, :size =>'20G', :type => 'qcow2'
+        end
+        c73_client.vm.provider :libvirt do |domain|
+            domain.cpus = 2
+            domain.cpu_mode = 'host-passthrough'
+            domain.memory = 2048
+            domain.nested = false
+            domain.volume_cache = 'none'
+        end
+        c73_client.vm.synced_folder "./files", "/home/vagrant/files", disabled: false, create: true, owner: "vagrant", group: "vagrant"
+        c73_client.vm.provision "shell", inline: $my_install_c73_client, privileged: false
+    end
+
 end
 
 
