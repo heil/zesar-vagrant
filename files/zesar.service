@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve zesar
+After=network.target
+
+[Service]
+User=admin
+Group=nginx
+WorkingDirectory=/home/admin/files/srw.zesar
+Environment="PATH=/home/admin/.venv34/bin/"
+ExecStart=/home/admin/.venv34/bin/gunicorn  --paste /home/admin/files/production.ini
+
+[Install]
+WantedBy=multi-user.target
